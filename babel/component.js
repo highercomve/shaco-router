@@ -3,6 +3,23 @@ import HistoryManager from './history_manager'
 
 let alreadyRender = false
 
+let RouterLink = Shaco.ComponentFactory({
+  elementName: 'route-link',
+  template: `
+    <content></content>
+  `,
+  to (e) {
+    e.preventDefault()
+    HistoryManager.push(this.state.to)
+  },
+  view () {
+    Shaco.createElement('a', null, null, {
+      href: this.state.to,
+      onclick: this.to.bind(this)
+    }, this.state.child)
+  }
+})
+
 let RouterSelector = Shaco.ComponentFactory({
   elementName: 'route-selector',
   template: `
@@ -63,15 +80,6 @@ let RouterManager = Shaco.ComponentFactory({
       Object.assign(this.defaultRoute, { pattern, paramsArray })
     }
   },
-  renderChild(child = this.state.child) {
-    if (typeof child === 'function') {
-      return child();
-    } else if (Array.isArray(child)) {
-      child.forEach(this.renderChild);
-    } else {
-      return child;
-    }
-  },
   renderRouteComponent () {
     let selectedRoute = this.getComponentForRoute()
     if (selectedRoute.hasOwnProperty('pattern')) {
@@ -80,7 +88,7 @@ let RouterManager = Shaco.ComponentFactory({
     }
   },
   view: function () {
-    this.renderChild()
+    this.renderChildren()
     this.renderRouteComponent()
   }
 })

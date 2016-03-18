@@ -1,6 +1,6 @@
 {
   "name": "shaco-router",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Component to deal with history changes with shaco",
   "main": "index.js",
   "scripts": {

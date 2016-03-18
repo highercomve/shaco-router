@@ -18,6 +18,21 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 var alreadyRender = false;
 
+var RouterLink = _shadowComponent2.default.ComponentFactory({
+  elementName: 'route-link',
+  template: '\n    <content></content>\n  ',
+  to: function to(e) {
+    e.preventDefault();
+    _history_manager2.default.push(this.state.to);
+  },
+  view: function view() {
+    _shadowComponent2.default.createElement('a', null, null, {
+      href: this.state.to,
+      onclick: this.to.bind(this)
+    }, this.state.child);
+  }
+});
+
 var RouterSelector = _shadowComponent2.default.ComponentFactory({
   elementName: 'route-selector',
   template: '\n    <content></content>\n  ',
@@ -73,17 +88,6 @@ var RouterManager = _shadowComponent2.default.ComponentFactory({
       Object.assign(this.defaultRoute, { pattern: pattern, paramsArray: paramsArray });
     }
   },
-  renderChild: function renderChild() {
-    var child = arguments.length <= 0 || arguments[0] === undefined ? this.state.child : arguments[0];
-
-    if (typeof child === 'function') {
-      return child();
-    } else if (Array.isArray(child)) {
-      child.forEach(this.renderChild);
-    } else {
-      return child;
-    }
-  },
   renderRouteComponent: function renderRouteComponent() {
     var selectedRoute = this.getComponentForRoute();
     if (selectedRoute.hasOwnProperty('pattern')) {
@@ -93,7 +97,7 @@ var RouterManager = _shadowComponent2.default.ComponentFactory({
   },
 
   view: function view() {
-    this.renderChild();
+    this.renderChildren();
     this.renderRouteComponent();
   }
 });
